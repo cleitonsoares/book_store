@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  node_backend:
+    container_name: book_api
+    image: node:15
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    environment:
+      - TYPEORM_CONNECTION=postgres 
+      - TYPEORM_HOST=postgresdb
+      - TYPEORM_PORT=5432
+      - TYPEORM_USERNAME=postgres
+      - TYPEORM_PASSWORD=postgres
+      - TYPEORM_DATABASE=book_store
+      - TYPEORM_SYNCHRONIZE=true
+      - TYPEORM_LOGGING=false
+      - TYPEORM_ENTITIES=src/database/entities/*
+      - TYPEORM_MIGRATIONS=src/database/migrations/*
+      - TYPEORM_ENTITIES_DIR=src/database/entities
+      - TYPEORM_MIGRATIONS_DIR=src/database/migrations
+      - TYPEORM_SEEDING_SEEDS=src/database/seeds/*
+      - API_SECRET=b67e2042-7393-42ab-8094-6e7d276285d1296b06ed-86ce-4de2-b714-30482156b850
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "1"
+    volumes:
+      - ./:/app
+  postgresdb:
+    image: postgres:12
+    container_name: book_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=book_store
+    volumes:
+      - pgdata1:/var/lib/postgresql/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "1"
+
+volumes:
+  pgdata1: {}
